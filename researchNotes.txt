@@ -1,0 +1,111 @@
+Notes:
+- Calculating the physics parameters was relatively straight forward. 
+- The one down side is that the Pygame physics simulation is 10x faster than in real life. 
+- Visualizing the orbits was difficult since the periapsis and apoaisis of the orbits 
+were not readily available to create accurate calculations. 
+- Instead we opted to create a sample path which was then used to predict the rest of 
+the orbit. 
+- Simple images cannot be rotated. However images loaded as objects can be rotated. 
+
+- A simple formula was found that can be used to calculate the apoapsis. S = (v^2 - u^2) / 2a
+- One notable issue with that equation is that is requires the 'a' apoapsis variable to 
+calculate the displacement. 
+- We will need to research another reward system for the AI that involve the use of the 
+variation of distance between the craft and the planet. 
+- To facilitate the reinforcement learning, I created a reset function that resets the 
+ship's parameters. 
+- One notable limitation of using a list of distances to calculate the apoapsis, 
+periapsis, and eccentricity of the rocket's orbit is that one can only obtain the 
+values after the craft has completed an orbit. 
+
+- I added in a text box at the bottom of the screen to serve as the space where the 
+user can enter the prompts for the game modifications. 
+- Keys outside the for event loop can be pressed selected continuously without clicking 
+the buttons continuously. Ideal for throttle and roll controls. 
+- Keys inside the event loop must be clicked continuously to be taken as input, ideal 
+for keyboard typing. 
+- I used the 'Enter' key as a requirement for the text input to be entered. If I do 
+not have a set key, the reset_ship() function will be called continuously, preventing 
+the ship from being able to move. 
+- I added in a series of if statements that take in certain key words from the input 
+text as instructions of how to scale and move the planet. 
+
+- As the file becomes more cumbersome, I realize I need to subdivide the program 
+into multiple files. 
+- Images.py contains a class that loads all the necessary planet and background images. 
+- Orbits.py contains a class that displays the orbits and returns a list of distance 
+coordinates that can be used to calculate apoapsis and periapsis.
+- Planet.py creates planets with randomized textures, sizes, and mass. 
+- TextInput.py will hold the class that calls upon the open AI ChatGPT to create and 
+compile any new necessary code. 
+
+- the TextInput file uses the OpenAI library to interface with the ChatGPT AI. 
+- Secret Key: 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
+- One issue is that ChatGPT's free version does not allow me to use the API key. 
+- In the meantime, I have opted to test a variant of the TextChatCode class that 
+returns a simple Pong game Python program.
+- The code contained in the 'response' string variable can be executed using the
+exec() command. 
+
+- With the realization that I can use the exec() command to run strings as executable 
+programs, I created a program that allows the user to modify and compile a game on the go. 
+- the TKinter library can be used to create a separate secondary window for the text 
+box for the user to input the changes to the code. 
+- Pyflakes and mypy are reportedly used to catch semantic errors, errors which involve 
+undeclared variables. However these libraries fail to do their intended task
+- The Ast library is supposed to be more effective, but it is too complex and timely
+to install. 
+- A try catch exception is by far the most reliable way to catch any error. The 
+is_valid_code function has been modified to use exceptions. 
+
+- When I try to make the invalid code into a class, TKinter has issues with the file 
+being a class with a run function rather than a traditional pygame that can be 
+referenced and run as an executable string file. 
+- As of now, the programs have been divided into 2 caterogies, the Hardcoded games and 
+the Dynamically coded games. 
+- The Hardcoded games feature the procedural planet building game with a pre-determined 
+set of possible changes for the planets, which includes size, position, and addition of 
+new planets. 
+- The Dynamically coded games feature a game with a ChatGPT interface that creates a 
+functioning game from the chat prompts, and another game that applies changes to the code 
+of an existing Pong game. 
+
+- By adding a set of lines that run the initial program with the press of the 'Enter' key 
+to the end of any game created, I can alternate between the game generator apps and the 
+game itself. 
+- This functionality however does not account for games that end with 'pygame.quit()'
+- The return code was also added to the Invalid class code to allow the user to return 
+to the game generators in an event of an invalid code. 
+- The initialization of the ModifiedDynamicGame.py and the ModifiedTextGame.py files allows 
+the programs to save code retain changes to existing programs. 
+- In TextInput.py, if the keyword 'create' is entered, a new game is created. Otherwise
+the existing game saved in the ModifiedTextGame.py file is promoted to ChatGPT and altered. 
+- I noticed that some game interfere with the process running in the main TextInput.py 
+program. Instead of the game I get a screen that is just a copy of the main file. 
+- Any attempt to multi-thread the program results in a list of errors too complex to fix. 
+
+- The 'is_valid_code' function in TextInput.py can detect and display a screen with an 
+error message for virtually any known compilation error. 
+- The one notable issue with this function is that if the majority of the game's code 
+does not call within a singular 'while true' loop, then the function throws some errors 
+that do not show up when one runs the 'ModifiedTextGame.py' file itself. 
+- Examples of non-existent errors caught by the 'is_valid_code' function include the 
+display of the main program's window instead of the game, and 'no-reference' errors that 
+mention global variables that do exist and do not usually cause compilation issues. 
+- The only known remedy for the aforementioned error is to first instruct the API to 
+first generate a Pong game instance, and then generate the other desired game. 
+
+
+sources: 
+- rocket equation: https://pressbooks.online.ucf.edu/osuniversityphysics/chapter/9-7-rocket-propulsion/#:~:text=mim).-,%CE%94%20v%20%3D%20u%20ln%20(%20m%20i%20m%20)%20.,m0%20down%20to%20m.
+- orbital mechanics: https://oer.pressbooks.pub/lynnanegeorge/chapter/chapter-1/
+- finding periapsis: https://courses.lumenlearning.com/suny-osuniversityphysics/chapter/13-5-keplers-laws-of-planetary-motion/
+- orbit semi major axis: https://physics.stackexchange.com/questions/295431/how-can-i-calculate-the-semi-major-axis-from-velocity-position-and-pull?utm_source=hashnode&utm_medium=hashnode+rix&utm_campaign=rix_chatbot_answer
+- Apoapsis change: https://orbital-mechanics.space/the-orbit-equation/orbital-nomenclature.html?utm_source=hashnode&utm_medium=hashnode+rix&utm_campaign=rix_chatbot_answer
+- Textbox: https://www.geeksforgeeks.org/how-to-create-a-text-input-box-with-pygame/
+- ChatGpt with Python: https://blog.enterprisedna.co/how-to-use-chatgpt-for-python/
+- Executing string code Python: https://realpython.com/python-exec/#:~:text=The%20exec()%20function%20will,should%20contain%20valid%20Python%20code.
+- TKinter window python: https://docs.python.org/3/library/tkinter.html
+- Alpaca AI Chat program: https://crfm.stanford.edu/2023/03/13/alpaca.html
+- ChatGPT research article: https://www.sciencedirect.com/science/article/pii/S266734522300024X
+- Ursina python: https://pypi.org/project/ursina/
